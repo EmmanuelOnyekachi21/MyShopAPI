@@ -16,6 +16,11 @@ from django.urls import path
 urlpatterns = [
     path('', views.product_list, name='product_list'),
     path(
+        'search/',
+        views.query_product_list,
+        name='query_search'
+    ),
+    path(
         '<slug:category_slug>/',
         views.product_list,
         name='product_list_by_category'

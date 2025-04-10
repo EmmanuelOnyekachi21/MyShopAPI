@@ -69,3 +69,17 @@ def product_details(request, category_slug, product_slug):
     )
     serializer = ProductDetailSerializer(product)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def query_product_list(request):
+    query = request.query_params.get('query')
+    
+    if query:
+        products = Product.objects.filter(product_name__icontains=query, is_available=True)
+    else:
+        products = Product.objects.filter(is_available=True)
+    paginator = PageNumberPagination()
+    paginator.page_size = 6
+    paginated_products = paginator.paginate_queryset(products, request)
+    serializer = ProductSerializer(paginated_products, many=True)
+    return paginator.get_paginated_response(serializer.data)
